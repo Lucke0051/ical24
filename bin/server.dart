@@ -15,10 +15,15 @@ final _router = Router()
   ..get("/", _rootHandler)
   ..get("/ical/<schoolHostname>/<schoolGuid>/<schoolScope>/<classGuid>", _getCalendarHandler)
   ..get("/schools/<schoolHostname>/<schoolScope>", _getSchoolsHandler)
-  ..get("/classes/<schoolHostname>/<schoolGuid>/<schoolScope>", _getClassesHandler);
+  ..get("/classes/<schoolHostname>/<schoolGuid>/<schoolScope>", _getClassesHandler)
+  ..get("/favicon.png", _iconHandler);
 
 Future<Response> _rootHandler(Request req) async {
   return Response.ok(await File("/app/index.html").readAsString(), headers: {"Content-Type": "text/html"});
+}
+
+Future<Response> _iconHandler(Request req) async {
+  return Response.ok(await File("/app/ical24.png").readAsBytes(), headers: {"Content-Type": "image/png"});
 }
 
 void main(List<String> args) async {
