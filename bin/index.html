@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="sv">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="Lukas Pallhed">
+	<title>ical24 Schema</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+
+	<style>
+		html,
+		body {
+			height: 100%;
+		}
+
+		body {
+			display: flex;
+			align-items: center;
+			padding-top: 40px;
+			padding-bottom: 40px;
+			background-color: #f5f5f5;
+		}
+
+		.form-main {
+			max-width: 400px;
+			padding: 15px;
+		}
+	</style>
+</head>
+
+<body class="text-center">
+
+	<main class="form-main w-100 m-auto">
+		<div class="input-group mb-2">
+			<input type="text" class="form-control" id="domain" placeholder="Domän" value="orebro.skola24.se"
+				onfocusout="updateSchools()">
+			<span class="input-group-text"><a style="text-decoration: none;" target="_blank"
+					href="https://www.skola24.se/Applications/Authentication/login.aspx?host=www.skola24.se"><i
+						class="bi bi-box-arrow-up-right"></i></a></span>
+		</div>
+		<input type="text" class="form-control mb-2" id="scope" placeholder="Scope"
+			value="8a22163c-8662-4535-9050-bc5e1923df48" onfocusout="updateSchools()">
+		<select class="form-select mb-2" id="school" disabled onchange="if (this.selectedIndex) updateClasses();">
+			<option selected disabled>Välj skola</option>
+			<option value="1">One</option>
+			<option value="2">Two</option>
+			<option value="3">Three</option>
+		</select>
+		<select class="form-select mb-2" id="class" disabled onchange="if (this.selectedIndex) updateButton();">
+			<option selected disabled>Välj klass</option>
+			<option value="1">One</option>
+			<option value="2">Two</option>
+			<option value="3">Three</option>
+		</select>
+		<label id="syncWeeksLabel" for="syncWeeks" class="form-label">Veckor att synka</label>
+		<input type="range" class="form-range" id="syncWeeks" max="10" min="1" value="2"
+			onchange="updateSyncWeeksLabel();">
+
+		<a href="#" id="genButton" class="w-100 btn btn-lg btn-primary disabled">Öppna</a>
+	</main>
+
+	<script>
+		var hostnameE = document.getElementById("domain");
+		var scopeE = document.getElementById("scope");
+		var schoolE = document.getElementById("school");
+		var classE = document.getElementById("class");
+		var genButton = document.getElementById("genButton");
+		var syncWeeksE = document.getElementById("syncWeeks");
+		var syncWeeksLabel = document.getElementById("syncWeeksLabel");
+
+		function updateSchools() {
+			try {
+				var xmlHttp = new XMLHttpRequest()
+				xmlHttp.open("GET", "/schools/" + hostnameE.value + "/" + scopeE.value
+					, false)
+				xmlHttp.send()
+
+				var schools = JSON.parse(xmlHttp.responseText)
+				if (schools && schools.length > 0) {
+					for (let index = 0; index < schoolE.options.length; index++) {
+						const element = schoolE.options[index];
+						if (index > 0) {
+							element.remove()
+						}
+					}
+
+					schools.forEach(school => {
+						var option = document.createElement("option")
+						option.value = school.guid
+						option.innerText = school.name
+						schoolE.appendChild(option)
+					});
+
+					schoolE.disabled = false
+				} else {
+					schoolE.disabled = true
+				}
+			} catch (error) {
+				console.log(error)
+				schoolE.disabled = true
+			}
+		}
+
+		function updateClasses() {
+			try {
+				var xmlHttp = new XMLHttpRequest()
+				xmlHttp.open("GET", "/classes/" + hostnameE.value + "/" + schoolE.value + "/" + scopeE.value
+					, false)
+				xmlHttp.send()
+
+				var classes = JSON.parse(xmlHttp.responseText)
+				if (classes && classes.length > 0) {
+					for (let index = 0; index < classE.options.length; index++) {
+						const element = classE.options[index];
+						if (index > 0) {
+							element.remove()
+						}
+					}
+
+					classes.forEach(schoolClass => {
+						var option = document.createElement("option")
+						option.value = schoolClass.guid
+						option.innerText = schoolClass.name
+						classE.appendChild(option)
+					});
+
+					classE.disabled = false
+				} else {
+					classE.disabled = true
+				}
+			} catch (error) {
+				console.log(error)
+				classE.disabled = true
+			}
+		}
+
+		var buttonHasBeenUpdated = false
+		function updateButton() {
+			buttonHasBeenUpdated = true
+			var host = "webcal://" + window.location.host;
+			var url = host + "/ical/" + hostnameE.value + "/" + schoolE.value + "/" + scopeE.value + "/" + classE.value + "?weeks=" + syncWeeksE.value;
+			genButton.href = url
+
+			genButton.classList.remove("disabled")
+			genButton.disabled = false
+		}
+
+		function updateSyncWeeksLabel() {
+			syncWeeksLabel.innerText = "Veckor att synka (" + syncWeeksE.value + ")"
+			if (buttonHasBeenUpdated) {
+				updateButton()
+			}
+		}
+
+		updateSyncWeeksLabel()
+		updateSchools()
+	</script>
+
+</body>
+
+</html>

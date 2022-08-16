@@ -7,6 +7,24 @@ import 'skola24classes.dart';
 
 export 'skola24classes.dart';
 
+bool mapEquals<T, U>(Map<T, U>? a, Map<T, U>? b) {
+  if (a == null) {
+    return b == null;
+  }
+  if (b == null || a.length != b.length) {
+    return false;
+  }
+  if (identical(a, b)) {
+    return true;
+  }
+  for (final T key in a.keys) {
+    if (!b.containsKey(key) || b[key] != a[key]) {
+      return false;
+    }
+  }
+  return true;
+}
+
 Future<String?> getRenderKey(String scope) async {
   final http.Response response = await http.post(
     Uri(
@@ -31,7 +49,14 @@ Future<String?> getRenderKey(String scope) async {
   }
 }
 
+Map classCache = {};
 Future<List<Class>?> getClasses(String hostname, String guid, String scope) async {
+  final String cacheKey = hostname + guid + scope;
+  if (classCache[cacheKey] != null) {
+    print("Got classes from cache");
+    return classCache[cacheKey] as List<Class>;
+  }
+
   final http.Response response = await http.post(
     Uri(
       host: "web.skola24.se",
@@ -56,14 +81,28 @@ Future<List<Class>?> getClasses(String hostname, String guid, String scope) asyn
     for (final jsonClass in jsonClasses) {
       classes.add(Class(guid: jsonClass["groupGuid"] as String, name: jsonClass["groupName"] as String));
     }
+
+    classCache[cacheKey] = classes;
+
     return classes;
   } else {
     print("Could not get classes, status code: ${response.statusCode}");
   }
 }
 
-Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scope, String classGuid) async {
-  final DateTime now = DateTime.now();
+Map lessonCache = {};
+Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scope, String classGuid, {int weeks = 1}) async {
+  final String cacheKey = hostname + schoolGuid + scope + classGuid + weeks.toString();
+  if (lessonCache[cacheKey] != null) {
+    print("Got lessons from cache");
+    return lessonCache[cacheKey] as List<Lesson>;
+  }
+
+  DateTime now = DateTime.now().toUtc();
+  if (weeks > 1) {
+    now.add(Duration(days: 7 * (weeks - 1)));
+  }
+  now = now.toLocal();
   final Duration yearStartDiff = now.difference(DateTime(now.year));
 
   final String requestBody = jsonEncode({
@@ -169,8 +208,50 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
       );
     }
 
+    lessonCache[cacheKey] = lessons;
+
     return lessons;
   } else {
     print("Request failed, status code: ${response.statusCode}");
+  }
+}
+
+Map schoolCache = {};
+Future<List<School>?> getSchools(String hostname, String scope) async {
+  final String cacheKey = hostname + scope;
+  if (schoolCache[cacheKey] != null) {
+    print("Got schools from cache");
+    return schoolCache[cacheKey] as List<School>;
+  }
+
+  final http.Response response = await http.post(
+    Uri(
+      host: "web.skola24.se",
+      pathSegments: ["api", "services", "skola24", "get", "timetable", "viewer", "units"],
+      scheme: "https",
+      port: 443,
+    ),
+    body: '{"getTimetableViewerUnitsRequest":{"hostName":"$hostname"}}',
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "X-Scope": scope,
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final Map data = jsonDecode(response.body) as Map;
+    final List units = data["data"]["getTimetableViewerUnitsResponse"]["units"] as List;
+
+    final List<School> schools = [];
+    for (final unit in units) {
+      schools.add(School(guid: unit["unitGuid"] as String, name: unit["unitId"] as String));
+    }
+
+    schoolCache[cacheKey] = schools;
+
+    return schools;
+  } else {
+    print("Could not get units, status code: ${response.statusCode}");
   }
 }

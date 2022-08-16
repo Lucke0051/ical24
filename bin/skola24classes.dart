@@ -6,6 +6,11 @@ class Class {
     required this.guid,
     required this.name,
   });
+
+  Map<String, dynamic> toJson() => {
+        "guid": guid,
+        "name": name,
+      };
 }
 
 class Lesson {
@@ -32,4 +37,19 @@ class Lesson {
   String toString() {
     return "'$name' at: ${start.toIso8601String()}; ${end.toIso8601String()}";
   }
+}
+
+class School {
+  final String guid;
+  final String name;
+
+  const School({
+    required this.guid,
+    required this.name,
+  });
+
+  Map<String, dynamic> toJson() => {
+        "guid": guid,
+        "name": name,
+      };
 }
