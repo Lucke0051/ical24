@@ -91,18 +91,19 @@ Future<List<Class>?> getClasses(String hostname, String guid, String scope) asyn
 }
 
 Map lessonCache = {};
-Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scope, String classGuid, {int weeks = 1}) async {
-  final String cacheKey = hostname + schoolGuid + scope + classGuid + weeks.toString();
+Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scope, String classGuid, {int extraWeeks = 0}) async {
+  final String cacheKey = hostname + schoolGuid + scope + classGuid + extraWeeks.toString();
   if (lessonCache[cacheKey] != null) {
     print("Got lessons from cache");
     return lessonCache[cacheKey] as List<Lesson>;
   }
 
   DateTime now = DateTime.now().toUtc();
-  if (weeks > 1) {
-    now.add(Duration(days: 7 * (weeks - 1)));
+  if (extraWeeks > 0) {
+    now = now.add(Duration(days: 7 * extraWeeks));
   }
   now = now.toLocal();
+
   final Duration yearStartDiff = now.difference(DateTime(now.year));
 
   final String requestBody = jsonEncode({

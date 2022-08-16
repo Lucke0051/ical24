@@ -33,8 +33,12 @@ void main(List<String> args) async {
   Timer.periodic(const Duration(hours: 12), (_) {
     skola24.schoolCache = {};
     skola24.classCache = {};
+    print("Cleared schools and classes cache");
   });
-  Timer.periodic(const Duration(minutes: 30), (_) => skola24.lessonCache = {});
+  Timer.periodic(const Duration(minutes: 30), (_) {
+    skola24.lessonCache = {};
+    print("Cleared lessons cache");
+  });
 }
 
 Future<Response> _getCalendarHandler(Request request) async {
@@ -47,7 +51,7 @@ Future<Response> _getCalendarHandler(Request request) async {
   final List<skola24.Lesson> allLessons = [];
 
   for (var i = 0; i < weeks; i++) {
-    final List<skola24.Lesson>? lessons = await skola24.getLessons(schoolHostname, schoolGuid, schoolScope, classGuid, weeks: weeks);
+    final List<skola24.Lesson>? lessons = await skola24.getLessons(schoolHostname, schoolGuid, schoolScope, classGuid, extraWeeks: i);
     if (lessons == null) return Response.internalServerError(body: "Could not get lessons");
     allLessons.addAll(lessons);
   }
