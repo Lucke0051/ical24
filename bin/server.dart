@@ -26,8 +26,7 @@ void main(List<String> args) async {
 
   final handler = const Pipeline().addMiddleware(logRequests()).addHandler(_router);
 
-  final int port = int.parse(Platform.environment["PORT"] ?? "2005");
-  final HttpServer server = await serve(handler, ip, port);
+  final HttpServer server = await serve(handler, ip, 2005);
   print("Server listening on port: ${server.port}");
 
   Timer.periodic(const Duration(hours: 12), (_) {
