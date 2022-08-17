@@ -198,7 +198,7 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
 
       lessons.add(
         Lesson(
-          guid: jsonLesson["guidId"] as String,
+          guid: start.week.toString() + (jsonLesson["guidId"] as String),
           start: start,
           end: end,
           name: jsonLesson["texts"].first as String? ?? "Unknown",
