@@ -52,6 +52,11 @@ Example response:
 ]
 ```
 
+### Getting a JSON list of lessons
+``/lessons/<schoolHostname>/<schoolGuid>/<schoolScope>/<classGuid>?weeks=<int>``
+
+The ``weeks`` query parameter defaults to 1. Can be any integer between 1 and 10.
+
 ### Getting a schedule in [iCalendar](https://en.wikipedia.org/wiki/ICalendar) format
 ``/ical/<schoolHostname>/<schoolGuid>/<schoolScope>/<classGuid>?weeks=<int>``
 

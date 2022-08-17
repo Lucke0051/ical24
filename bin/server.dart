@@ -14,6 +14,7 @@ import 'skola24.dart' as skola24;
 final _router = Router()
   ..get("/", _rootHandler)
   ..get("/ical/<schoolHostname>/<schoolGuid>/<schoolScope>/<classGuid>", _getCalendarHandler)
+  ..get("/lessons/<schoolHostname>/<schoolGuid>/<schoolScope>/<classGuid>", _getLessonsHandler)
   ..get("/schools/<schoolHostname>/<schoolScope>", _getSchoolsHandler)
   ..get("/classes/<schoolHostname>/<schoolGuid>/<schoolScope>", _getClassesHandler)
   ..get("/favicon.png", _iconHandler);
@@ -101,4 +102,22 @@ Future<Response> _getClassesHandler(Request request) async {
   if (classes == null) return Response.internalServerError(body: "Could not get classes");
 
   return Response.ok(jsonEncode(classes), headers: {"Content-Type": "application/json"});
+}
+
+Future<Response> _getLessonsHandler(Request request) async {
+  final String schoolHostname = request.params["schoolHostname"] as String;
+  final String schoolGuid = request.params["schoolGuid"] as String;
+  final String schoolScope = request.params["schoolScope"] as String;
+  final String classGuid = request.params["classGuid"] as String;
+  final int weeks = (int.tryParse((request.url.queryParameters["weeks"] as String?) ?? "1") ?? 1).clamp(1, 10);
+
+  final List<skola24.Lesson> allLessons = [];
+
+  for (var i = 0; i < weeks; i++) {
+    final List<skola24.Lesson>? lessons = await skola24.getLessons(schoolHostname, schoolGuid, schoolScope, classGuid, extraWeeks: i);
+    if (lessons == null) return Response.internalServerError(body: "Could not get lessons");
+    allLessons.addAll(lessons);
+  }
+
+  return Response.ok(jsonEncode(allLessons), headers: {"Content-Type": "application/json"});
 }

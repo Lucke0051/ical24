@@ -37,6 +37,16 @@ class Lesson {
   String toString() {
     return "'$name' at: ${start.toIso8601String()}; ${end.toIso8601String()}";
   }
+
+  Map<String, dynamic> toJson() => {
+        "guid": guid,
+        "name": name,
+        "start": start.millisecondsSinceEpoch,
+        "end": end.millisecondsSinceEpoch,
+        "teacher": teacher,
+        "location": location,
+        "description": description,
+      };
 }
 
 class School {
