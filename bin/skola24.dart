@@ -157,20 +157,15 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
         }
 
         final List<String> split = location.split(" ");
-        if (split.length >= 3) {
+        if (split.length >= 2) {
           split.removeLast();
           location = split.join(" ");
+        } else {
+          location = null;
         }
-      }
 
-      String? teacher;
-      if (texts.length >= 2) {
-        teacher = texts[1] as String;
-        if (teacher.substring(0, 1) == "/") {
-          teacher = teacher.substring(1);
-        }
-        if (teacher.isEmpty) {
-          teacher = null;
+        if (location == "" || location == " ") {
+          location = null;
         }
       }
 
@@ -202,7 +197,6 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
           start: start,
           end: end,
           name: jsonLesson["texts"].first as String? ?? "Unknown",
-          teacher: teacher,
           location: location,
           description: texts.join("\n"),
         ),

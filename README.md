@@ -1,5 +1,5 @@
 # iCal24
-This application provides easy-to-use APIs proxied from Skola24.
+This application provides easy-to-use APIs that proxy information from Skola24.
 The primary purpose of the application is to provide an iCalendar schedule feed extracted from Skola24.
 
 If you do not wish to host the application yourself, you may use [ical24.pallhed.se](https://ical24.pallhed.se).
@@ -56,6 +56,86 @@ Example response:
 ``/lessons/<schoolHostname>/<schoolGuid>/<schoolScope>/<classGuid>?weeks=<int>``
 
 The ``weeks`` query parameter defaults to 1. Can be any integer between 1 and 10.
+
+Request URL: ``https://ical24.pallhed.se/lessons/orebro.skola24.se/ZjBiZTJhODQtYWU3Mi1mYWI0LTg1NGMtYTdlMmQ5YzQzYjE1/8a22163c-8662-4535-9050-bc5e1923df48/Mzg4ZGY4YmYtYTc1ZS1mM2JkLTk4NDktMjZiYWNhNDg3NDQ5?weeks=3``
+
+Example response:
+```json
+[
+		{
+		"guid": "33MGI0NDVhZTItNzJjNC1mOTJmLTk2M2UtM2M5OTdhMGI5Mzhj",
+		"name": "Matematik 3c MAT",
+		"start": 1660811400000,
+		"end": 1660816200000,
+		"location": "G 1093",
+		"description": "Matematik 3c MAT\n/ANOLS60\n/G 1093 MATMAT03c-TEIM21TEPR21"
+	},
+	{
+		"guid": "33ODgyNmMzZmQtZWZhYi1mZTNmLTgyYjMtNTBkMGEzMDdhYTIw",
+		"name": "Svenska 2 SVE",
+		"start": 1660818000000,
+		"end": 1660822800000,
+		"location": "G 1140 (Jupiter)",
+		"description": "Svenska 2 SVE\n/SVTID22\n/G 1140 (Jupiter) SVESVE02-TEIM21TEPR21"
+	},
+	{
+		"guid": "33YjFkMGNkM2EtMjU4My1mZDRlLWI4ZDEtZjUzNGVlYTNjN2I3",
+		"name": "Webbutveckling 1 WEB",
+		"start": 1660827000000,
+		"end": 1660831800000,
+		"location": "G 1016:a (Kyrksalen)",
+		"description": "Webbutveckling 1 WEB\n/MASAN33\n/G 1016:a (Kyrksalen) WEUWEB01-TEIM21"
+	},
+	{
+		"guid": "33MjkyMThhNTAtZGQ1Mi1mNjdmLWEwZTItZjM1YmFkNzI3ZmYy",
+		"name": "Webbutveckling 1 WEB",
+		"start": 1660833000000,
+		"end": 1660837800000,
+		"location": "G 1016:a (Kyrksalen)",
+		"description": "Webbutveckling 1 WEB\n/MASAN33\n/G 1016:a (Kyrksalen) WEUWEB01-TEIM21"
+	},
+	{
+		"guid": "33ZDYyYTI0ZGQtY2ZiNS1mYWM2LTkwYjQtY2I2MGFiNTA5MGZi",
+		"name": "Lunch",
+		"start": 1660824600000,
+		"end": 1660827000000,
+		"location": " TEIM21",
+		"description": "Lunch\n/\n/ TEIM21"
+	},
+	{
+		"guid": "33NTM2NWI3NjAtMWRlMC1mMTgxLThhYjYtYTRhZDYyOWIzMDQ4",
+		"name": "Lunch",
+		"start": 1660908600000,
+		"end": 1660911000000,
+		"location": " TEIM21",
+		"description": "Lunch\n/\n/ TEIM21"
+	},
+	{
+		"guid": "33N2E4ZDAzZDItMjc1NS1mODkzLTg1OTUtYjY1Mzc0NGVhMDg5",
+		"name": "Engelska 6 ENG",
+		"start": 1660897200000,
+		"end": 1660902000000,
+		"location": "G 1140 (Jupiter)",
+		"description": "Engelska 6 ENG\n/NISMI22\n/G 1140 (Jupiter) ENGENG06-TEIM21TEPR21"
+	},
+	{
+		"guid": "33NjUwNGRkNjUtMDUyZi1mODRhLWI1MTQtYjcxNDA0ODYzNWQ5",
+		"name": "Matematik 3c MAT",
+		"start": 1660903200000,
+		"end": 1660908000000,
+		"location": "G 1093",
+		"description": "Matematik 3c MAT\n/ANOLS60\n/G 1093 MATMAT03c-TEIM21TEPR21"
+	},
+	{
+		"guid": "33MTE5OWQ0Y2EtZmE5OC1mMzlkLTkyNGItZjVlMDlhZjUyNzhk",
+		"name": "Fysik 1 FYS",
+		"start": 1660911000000,
+		"end": 1660915200000,
+		"location": "G 1075 (Fysiksalen)",
+		"description": "Fysik 1 FYS\n/ANOLS60\n/G 1075 (Fysiksalen) FYSFYS01a-TEIM21TEPR21"
+	},
+]
+```
 
 ### Getting a schedule in [iCalendar](https://en.wikipedia.org/wiki/ICalendar) format
 ``/ical/<schoolHostname>/<schoolGuid>/<schoolScope>/<classGuid>?weeks=<int>``

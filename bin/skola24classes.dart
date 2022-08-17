@@ -19,7 +19,6 @@ class Lesson {
   final DateTime end;
 
   final String name;
-  final String? teacher;
   final String? location;
   final String? description;
 
@@ -28,7 +27,6 @@ class Lesson {
     required this.start,
     required this.end,
     required this.name,
-    this.teacher,
     this.location,
     this.description,
   });
@@ -43,7 +41,6 @@ class Lesson {
         "name": name,
         "start": start.millisecondsSinceEpoch,
         "end": end.millisecondsSinceEpoch,
-        "teacher": teacher,
         "location": location,
         "description": description,
       };
