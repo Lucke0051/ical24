@@ -50,7 +50,7 @@ Future<Response> _getCalendarHandler(Request request) async {
   final String schoolGuid = request.params["schoolGuid"] as String;
   final String schoolScope = request.params["schoolScope"] as String;
   final String classGuid = request.params["classGuid"] as String;
-  final int weeks = int.tryParse((request.url.queryParameters["weeks"] as String?) ?? "1") ?? 1;
+  final int weeks = (int.tryParse((request.url.queryParameters["weeks"] as String?) ?? "1") ?? 1).clamp(1, 10);
 
   final List<skola24.Lesson> allLessons = [];
 
@@ -89,7 +89,7 @@ Future<Response> _getSchoolsHandler(Request request) async {
   final List<skola24.School>? schools = await skola24.getSchools(schoolHostname, schoolScope);
   if (schools == null) return Response.internalServerError(body: "Could not get schools");
 
-  return Response.ok(jsonEncode(schools));
+  return Response.ok(jsonEncode(schools), headers: {"Content-Type": "application/json"});
 }
 
 Future<Response> _getClassesHandler(Request request) async {
@@ -100,5 +100,5 @@ Future<Response> _getClassesHandler(Request request) async {
   final List<skola24.Class>? classes = await skola24.getClasses(schoolHostname, schoolGuid, schoolScope);
   if (classes == null) return Response.internalServerError(body: "Could not get classes");
 
-  return Response.ok(jsonEncode(classes));
+  return Response.ok(jsonEncode(classes), headers: {"Content-Type": "application/json"});
 }
