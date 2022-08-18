@@ -33,7 +33,7 @@ void main(List<String> args) async {
   tzmain.initializeTimeZones();
 
   final tz.Location stockholm = tz.getLocation("Europe/Stockholm");
-  print(stockholm.currentTimeZone);
+  tz.setLocalLocation(stockholm);
 
   final InternetAddress ip = InternetAddress.anyIPv4;
 
