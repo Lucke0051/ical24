@@ -176,7 +176,7 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
       tz.TZDateTime start = tz.TZDateTime.local(
         now.year,
         1,
-        (yearStartDiff.inDays - now.weekday) + (jsonLesson["dayOfWeekNumber"] as int),
+        (yearStartDiff.inDays - (now.weekday - 1)) + (jsonLesson["dayOfWeekNumber"] as int),
         int.parse(startSplit[0]),
         int.parse(startSplit[1]),
         int.parse(startSplit[2]),
@@ -186,7 +186,7 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
       tz.TZDateTime end = tz.TZDateTime.local(
         now.year,
         1,
-        (yearStartDiff.inDays - now.weekday) + (jsonLesson["dayOfWeekNumber"] as int),
+        (yearStartDiff.inDays - (now.weekday - 1)) + (jsonLesson["dayOfWeekNumber"] as int),
         int.parse(endSplit[0]),
         int.parse(endSplit[1]),
         int.parse(endSplit[2]),
