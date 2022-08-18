@@ -179,6 +179,15 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
         int.parse(startSplit[1]),
         int.parse(startSplit[2]),
       ).toUtc();
+      print(start.toIso8601String());
+      print(tz.TZDateTime.local(
+        now.year,
+        1,
+        1,
+        int.parse(startSplit[0]),
+        int.parse(startSplit[1]),
+        int.parse(startSplit[2]),
+      ).toIso8601String());
       start = start.add(Duration(days: (yearStartDiff.inDays - now.weekday) + (jsonLesson["dayOfWeekNumber"] as int))).toLocal();
 
       final List<String> endSplit = (jsonLesson["timeEnd"] as String).split(":");
