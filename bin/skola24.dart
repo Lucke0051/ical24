@@ -177,7 +177,7 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
         int.parse(startSplit[0]),
         int.parse(startSplit[1]),
         int.parse(startSplit[2]),
-      ).toUtc();
+      );
       start = start.add(Duration(days: (yearStartDiff.inDays - now.weekday) + (jsonLesson["dayOfWeekNumber"] as int)));
 
       final List<String> endSplit = (jsonLesson["timeEnd"] as String).split(":");
@@ -188,14 +188,14 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
         int.parse(endSplit[0]),
         int.parse(endSplit[1]),
         int.parse(endSplit[2]),
-      ).toUtc();
+      );
       end = end.add(Duration(days: (yearStartDiff.inDays - now.weekday) + (jsonLesson["dayOfWeekNumber"] as int)));
 
       lessons.add(
         Lesson(
           guid: start.week.toString() + (jsonLesson["guidId"] as String),
-          start: start,
-          end: end,
+          start: start.toUtc(),
+          end: end.toUtc(),
           name: jsonLesson["texts"].first as String? ?? "Unknown",
           location: location,
           description: texts.join("\n"),
