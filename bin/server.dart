@@ -63,7 +63,7 @@ Future<Response> _getCalendarHandler(Request request) async {
 
   final ICalendar calendar = ICalendar(company: "skola24", product: "skola/schema", lang: "SV", refreshInterval: const Duration(hours: 4));
   for (final skola24.Lesson lesson in allLessons) {
-    print("${lesson.name} ${lesson.start.toIso8601String()}");
+    print("${lesson.name} local: ${lesson.start.toLocal().toIso8601String()} utc: ${lesson.start.toUtc().toIso8601String()}");
     final IEvent event = IEvent(
       uid: lesson.guid,
       start: lesson.start,
