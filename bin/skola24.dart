@@ -99,7 +99,9 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
     return lessonCache[cacheKey] as List<Lesson>;
   }
 
-  DateTime now = DateTime.now().toUtc();
+  tz.Location location = tz.getLocation("Europe/Stockholm");
+  tz.setLocalLocation(location);
+  tz.TZDateTime now = tz.TZDateTime.now(location).toUtc();
   if (extraWeeks > 0) {
     now = now.add(Duration(days: 7 * extraWeeks));
   }
@@ -174,32 +176,21 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
       tz.TZDateTime start = tz.TZDateTime.local(
         now.year,
         1,
-        1,
+        (yearStartDiff.inDays - now.weekday) + (jsonLesson["dayOfWeekNumber"] as int),
         int.parse(startSplit[0]),
         int.parse(startSplit[1]),
         int.parse(startSplit[2]),
-      ).toUtc();
-      print(start.toIso8601String());
-      print(tz.TZDateTime.local(
-        now.year,
-        1,
-        1,
-        int.parse(startSplit[0]),
-        int.parse(startSplit[1]),
-        int.parse(startSplit[2]),
-      ).toIso8601String());
-      start = start.add(Duration(days: (yearStartDiff.inDays - now.weekday) + (jsonLesson["dayOfWeekNumber"] as int))).toLocal();
+      );
 
       final List<String> endSplit = (jsonLesson["timeEnd"] as String).split(":");
       tz.TZDateTime end = tz.TZDateTime.local(
         now.year,
         1,
-        1,
+        (yearStartDiff.inDays - now.weekday) + (jsonLesson["dayOfWeekNumber"] as int),
         int.parse(endSplit[0]),
         int.parse(endSplit[1]),
         int.parse(endSplit[2]),
-      ).toUtc();
-      end = end.add(Duration(days: (yearStartDiff.inDays - now.weekday) + (jsonLesson["dayOfWeekNumber"] as int))).toLocal();
+      );
 
       lessons.add(
         Lesson(
