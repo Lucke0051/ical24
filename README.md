@@ -13,6 +13,7 @@ In order to use the application, you need to get your school/district's Skola24 
 	- You can also run the application natively with [Dart](https://dart.dev). See [dart: The Dart command-line tool](https://dart.dev/tools/dart-tool) for help on running or compiling the application.
 
 ## API
+All timestamps are in the UTC timezone.
 ### Getting a list of schools
 ``/schools/<schoolHostname>/<schoolScope>``
 
