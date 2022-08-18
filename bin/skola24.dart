@@ -178,8 +178,8 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
         int.parse(startSplit[0]),
         int.parse(startSplit[1]),
         int.parse(startSplit[2]),
-      );
-      start = start.add(Duration(days: (yearStartDiff.inDays - now.weekday) + (jsonLesson["dayOfWeekNumber"] as int)));
+      ).toUtc();
+      start = start.add(Duration(days: (yearStartDiff.inDays - now.weekday) + (jsonLesson["dayOfWeekNumber"] as int))).toLocal();
 
       final List<String> endSplit = (jsonLesson["timeEnd"] as String).split(":");
       tz.TZDateTime end = tz.TZDateTime.local(
@@ -189,8 +189,8 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
         int.parse(endSplit[0]),
         int.parse(endSplit[1]),
         int.parse(endSplit[2]),
-      );
-      end = end.add(Duration(days: (yearStartDiff.inDays - now.weekday) + (jsonLesson["dayOfWeekNumber"] as int)));
+      ).toUtc();
+      end = end.add(Duration(days: (yearStartDiff.inDays - now.weekday) + (jsonLesson["dayOfWeekNumber"] as int))).toLocal();
 
       lessons.add(
         Lesson(
