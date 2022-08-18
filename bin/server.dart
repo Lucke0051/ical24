@@ -6,6 +6,7 @@ import 'package:ical/serializer.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
+import 'package:timezone/data/latest.dart' as tzmain;
 import 'package:timezone/standalone.dart' as tz;
 
 import 'skola24.dart' as skola24;
@@ -29,9 +30,10 @@ Future<Response> _iconHandler(Request req) async {
 }
 
 void main(List<String> args) async {
-  await tz.initializeTimeZone();
+  tzmain.initializeTimeZones();
+
   final tz.Location stockholm = tz.getLocation("Europe/Stockholm");
-  tz.setLocalLocation(stockholm);
+  print(stockholm.currentTimeZone);
 
   final InternetAddress ip = InternetAddress.anyIPv4;
 
