@@ -11,8 +11,6 @@ import 'package:timezone/standalone.dart' as tz;
 
 import 'skola24.dart' as skola24;
 
-// /ical/orebro.skola24.se/ZjBiZTJhODQtYWU3Mi1mYWI0LTg1NGMtYTdlMmQ5YzQzYjE1/8a22163c-8662-4535-9050-bc5e1923df48/Mzg4ZGY4YmYtYTc1ZS1mM2JkLTk4NDktMjZiYWNhNDg3NDQ5
-
 final _router = Router()
   ..get("/", _rootHandler)
   ..get("/ical/<schoolHostname>/<schoolGuid>/<schoolScope>/<classGuid>", _getCalendarHandler)
