@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:ical/serializer.dart';
+import 'package:intl/intl.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -34,6 +35,8 @@ void main(List<String> args) async {
 
   final HttpServer server = await serve(handler, ip, 2005);
   print("Server listening on port: ${server.port}");
+  print(DateTime.now().timeZoneName);
+  print(DateTime.now().timeZoneOffset);
 
   Timer.periodic(const Duration(hours: 12), (_) {
     skola24.schoolCache = {};
