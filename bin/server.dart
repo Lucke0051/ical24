@@ -61,6 +61,7 @@ Future<Response> _getCalendarHandler(Request request) async {
     allLessons.addAll(lessons);
   }
 
+  print("ical calendar request");
   final ICalendar calendar = ICalendar(company: "skola24", product: "skola/schema", lang: "SV", refreshInterval: const Duration(hours: 4));
   for (final skola24.Lesson lesson in allLessons) {
     print("${lesson.start.toIso8601String()} utc: ${lesson.start.toUtc().toIso8601String()}");
