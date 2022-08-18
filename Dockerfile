@@ -18,6 +18,9 @@ COPY --from=build /app/bin/server /app/bin/
 COPY ./index.html /app
 COPY ./ical24.png /app
 
+ENV TZ=Europe/Stockholm
+RUN echo $TZ > /etc/timezone
+
 # Start server.
 EXPOSE 2005
 CMD ["/app/bin/server"]
