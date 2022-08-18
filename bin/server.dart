@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:ical/serializer.dart';
-import 'package:intl/intl.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
+import 'package:timezone/standalone.dart' as tz;
 
 import 'skola24.dart' as skola24;
 
@@ -29,14 +29,16 @@ Future<Response> _iconHandler(Request req) async {
 }
 
 void main(List<String> args) async {
+  await tz.initializeTimeZone();
+  final tz.Location stockholm = tz.getLocation("Europe/Stockholm");
+  tz.setLocalLocation(stockholm);
+
   final InternetAddress ip = InternetAddress.anyIPv4;
 
   final handler = const Pipeline().addMiddleware(logRequests()).addHandler(_router);
 
   final HttpServer server = await serve(handler, ip, 2005);
   print("Server listening on port: ${server.port}");
-  print(DateTime.now().timeZoneName);
-  print(DateTime.now().timeZoneOffset);
 
   Timer.periodic(const Duration(hours: 12), (_) {
     skola24.schoolCache = {};
@@ -69,8 +71,8 @@ Future<Response> _getCalendarHandler(Request request) async {
     print("${lesson.name} local: ${lesson.start.toLocal().toIso8601String()} utc: ${lesson.start.toUtc().toIso8601String()}");
     final IEvent event = IEvent(
       uid: lesson.guid,
-      start: lesson.start,
-      end: lesson.end,
+      start: lesson.start.toUtc(),
+      end: lesson.end.toUtc(),
       description: lesson.description,
       location: lesson.location,
       summary: lesson.name,

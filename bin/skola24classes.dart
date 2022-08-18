@@ -1,3 +1,5 @@
+import 'package:timezone/standalone.dart' as tz;
+
 class Class {
   final String guid;
   final String name;
@@ -15,8 +17,8 @@ class Class {
 
 class Lesson {
   final String guid;
-  final DateTime start;
-  final DateTime end;
+  final tz.TZDateTime start;
+  final tz.TZDateTime end;
 
   final String name;
   final String? location;

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:timezone/standalone.dart' as tz;
 
 import 'extensions.dart';
 import 'skola24classes.dart';
@@ -170,7 +171,7 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
       }
 
       final List<String> startSplit = (jsonLesson["timeStart"] as String).split(":");
-      DateTime start = DateTime(
+      tz.TZDateTime start = tz.TZDateTime.local(
         now.year,
         1,
         1,
@@ -178,16 +179,10 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
         int.parse(startSplit[1]),
         int.parse(startSplit[2]),
       );
-      print("a");
-      print(start.toIso8601String());
-      print(start.toUtc().toIso8601String());
       start = start.add(Duration(days: (yearStartDiff.inDays - now.weekday) + (jsonLesson["dayOfWeekNumber"] as int)));
-      print("b");
-      print(start.toIso8601String());
-      print(start.toUtc().toIso8601String());
 
       final List<String> endSplit = (jsonLesson["timeEnd"] as String).split(":");
-      DateTime end = DateTime(
+      tz.TZDateTime end = tz.TZDateTime.local(
         now.year,
         1,
         1,
@@ -200,8 +195,8 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
       lessons.add(
         Lesson(
           guid: start.week.toString() + (jsonLesson["guidId"] as String),
-          start: start.toUtc(),
-          end: end.toUtc(),
+          start: start,
+          end: end,
           name: jsonLesson["texts"].first as String? ?? "Unknown",
           location: location,
           description: texts.join("\n"),
