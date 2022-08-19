@@ -1,0 +1,16 @@
+name: CD
+
+on:
+  push:
+    branches: [ $default-branch ]
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy
+      uses: fjogeleit/http-request-action@v1
+      with:
+        url: "https://pcdu.pallhed.se"
+        method: "POST"
+        customHeaders: '{"Key": "${{ secrets.KEY }}","UpdateKey": "${{ secrets.UPDATEKEY }}"}'
