@@ -35,7 +35,7 @@ void main(List<String> args) async {
 
   final InternetAddress ip = InternetAddress.anyIPv4;
 
-  final handler = const Pipeline().addMiddleware(logRequests()).addHandler(_router);
+  final FutureOr<Response> Function(Request) handler = const Pipeline().addMiddleware(logRequests()).addHandler(_router);
 
   final HttpServer server = await serve(handler, ip, 2005);
   print("Server listening on port: ${server.port}");
