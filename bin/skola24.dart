@@ -155,7 +155,7 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
       String? location;
       if (texts.length >= 3) {
         location = texts[2] as String;
-        if (location.substring(0, 1) == "/") {
+        if (location.isNotEmpty && location.substring(0, 1) == "/") {
           location = location.substring(1);
         }
 
