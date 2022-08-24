@@ -153,7 +153,7 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
     for (final jsonLesson in jsonLessons) {
       final List texts = jsonLesson["texts"] as List;
       String? location;
-      if (texts.length >= 2) {
+      if (texts.length >= 3) {
         location = texts[2] as String;
         if (location.substring(0, 1) == "/") {
           location = location.substring(1);
