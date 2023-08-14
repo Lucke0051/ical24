@@ -96,14 +96,22 @@ Future<List<Class>?> getClasses(String hostname, String guid, String scope) asyn
 }
 
 Map lessonCache = {};
-Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scope, String classGuid, {int extraWeeks = 0, int selectionType = 0}) async {
+Future<List<Lesson>?> getLessons(
+  String hostname,
+  String schoolGuid,
+  String scope,
+  String classGuid, {
+  int extraWeeks = 0,
+  int selectionType = 0,
+  List<String>? ignoreNames,
+}) async {
   final String cacheKey = hostname + schoolGuid + scope + classGuid + extraWeeks.toString();
   if (lessonCache[cacheKey] != null) {
     print("Got lessons from cache");
     return lessonCache[cacheKey] as List<Lesson>;
   }
 
-  tz.Location location = tz.getLocation("Europe/Stockholm");
+  final tz.Location location = tz.getLocation("Europe/Stockholm");
   tz.setLocalLocation(location);
   tz.TZDateTime now = tz.TZDateTime.now(location).toUtc();
   if (extraWeeks > 0) {
@@ -177,7 +185,7 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
       }
 
       final List<String> startSplit = (jsonLesson["timeStart"] as String).split(":");
-      tz.TZDateTime start = tz.TZDateTime.local(
+      final tz.TZDateTime start = tz.TZDateTime.local(
         now.year,
         1,
         (yearStartDiff.inDays - (now.weekday - 1)) + (jsonLesson["dayOfWeekNumber"] as int),
@@ -187,7 +195,7 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
       );
 
       final List<String> endSplit = (jsonLesson["timeEnd"] as String).split(":");
-      tz.TZDateTime end = tz.TZDateTime.local(
+      final tz.TZDateTime end = tz.TZDateTime.local(
         now.year,
         1,
         (yearStartDiff.inDays - (now.weekday - 1)) + (jsonLesson["dayOfWeekNumber"] as int),
@@ -196,16 +204,20 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
         int.parse(endSplit[2]),
       );
 
-      lessons.add(
-        Lesson(
-          guid: start.week.toString() + (jsonLesson["guidId"] as String),
-          start: start,
-          end: end,
-          name: jsonLesson["texts"].first as String? ?? "Unknown",
-          location: location,
-          description: texts.join("\n"),
-        ),
-      );
+      final String name = jsonLesson["texts"].first as String? ?? "Unknown";
+
+      if (ignoreNames == null || !ignoreNames.contains(name)) {
+        lessons.add(
+          Lesson(
+            guid: start.week.toString() + (jsonLesson["guidId"] as String),
+            start: start,
+            end: end,
+            name: name,
+            location: location,
+            description: texts.join("\n"),
+          ),
+        );
+      }
     }
 
     lessonCache[cacheKey] = lessons;
@@ -214,6 +226,7 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
   } else {
     print("Request failed, status code: ${response.statusCode}");
   }
+
   return null;
 }
 
@@ -255,5 +268,6 @@ Future<List<School>?> getSchools(String hostname, String scope) async {
   } else {
     print("Could not get units, status code: ${response.statusCode}");
   }
+
   return null;
 }

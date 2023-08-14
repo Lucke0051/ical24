@@ -117,11 +117,21 @@ Future<Response> _getLessonsHandler(Request request) async {
   final int weeks = (int.tryParse(request.url.queryParameters["weeks"] ?? "1") ?? 1).clamp(1, 10);
   final int selectionType = int.tryParse(request.url.queryParameters["selectionType"] ?? "0") ?? 0;
 
+  final String? ignoreNamesString = request.url.queryParameters["ignoreNames"];
+  final List<String>? ignoreNames = ignoreNamesString?.split(";");
+
   final List<skola24.Lesson> allLessons = [];
 
   for (var i = 0; i < weeks; i++) {
-    final List<skola24.Lesson>? lessons =
-        await skola24.getLessons(schoolHostname, schoolGuid, schoolScope, classGuid, extraWeeks: i, selectionType: selectionType);
+    final List<skola24.Lesson>? lessons = await skola24.getLessons(
+      schoolHostname,
+      schoolGuid,
+      schoolScope,
+      classGuid,
+      extraWeeks: i,
+      selectionType: selectionType,
+      ignoreNames: ignoreNames,
+    );
 
     if (lessons == null) return Response.internalServerError(body: "Could not get lessons");
     allLessons.addAll(lessons);
