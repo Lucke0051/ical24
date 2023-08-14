@@ -48,6 +48,8 @@ Future<String?> getRenderKey(String scope) async {
   } else {
     print("Could not get renderKey, status code: ${response.statusCode}");
   }
+
+  return null;
 }
 
 Map classCache = {};
@@ -89,10 +91,12 @@ Future<List<Class>?> getClasses(String hostname, String guid, String scope) asyn
   } else {
     print("Could not get classes, status code: ${response.statusCode}");
   }
+
+  return null;
 }
 
 Map lessonCache = {};
-Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scope, String classGuid, {int extraWeeks = 0}) async {
+Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scope, String classGuid, {int extraWeeks = 0, int selectionType = 0}) async {
   final String cacheKey = hostname + schoolGuid + scope + classGuid + extraWeeks.toString();
   if (lessonCache[cacheKey] != null) {
     print("Got lessons from cache");
@@ -121,7 +125,7 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
     "renderKey": await getRenderKey(scope),
     "scheduleDay": 0,
     "selection": classGuid,
-    "selectionType": 0,
+    "selectionType": selectionType,
     "showHeader": false,
     "startDate": null,
     "unitGuid": schoolGuid,
@@ -210,6 +214,7 @@ Future<List<Lesson>?> getLessons(String hostname, String schoolGuid, String scop
   } else {
     print("Request failed, status code: ${response.statusCode}");
   }
+  return null;
 }
 
 Map schoolCache = {};
@@ -250,4 +255,5 @@ Future<List<School>?> getSchools(String hostname, String scope) async {
   } else {
     print("Could not get units, status code: ${response.statusCode}");
   }
+  return null;
 }

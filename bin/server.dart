@@ -56,7 +56,7 @@ Future<Response> _getCalendarHandler(Request request) async {
   final String schoolGuid = request.params["schoolGuid"] as String;
   final String schoolScope = request.params["schoolScope"] as String;
   final String classGuid = request.params["classGuid"] as String;
-  final int weeks = (int.tryParse((request.url.queryParameters["weeks"] as String?) ?? "1") ?? 1).clamp(1, 10);
+  final int weeks = (int.tryParse(request.url.queryParameters["weeks"] ?? "1") ?? 1).clamp(1, 10);
 
   final List<skola24.Lesson> allLessons = [];
 
@@ -114,12 +114,15 @@ Future<Response> _getLessonsHandler(Request request) async {
   final String schoolGuid = request.params["schoolGuid"] as String;
   final String schoolScope = request.params["schoolScope"] as String;
   final String classGuid = request.params["classGuid"] as String;
-  final int weeks = (int.tryParse((request.url.queryParameters["weeks"] as String?) ?? "1") ?? 1).clamp(1, 10);
+  final int weeks = (int.tryParse(request.url.queryParameters["weeks"] ?? "1") ?? 1).clamp(1, 10);
+  final int selectionType = int.tryParse(request.url.queryParameters["selectionType"] ?? "0") ?? 0;
 
   final List<skola24.Lesson> allLessons = [];
 
   for (var i = 0; i < weeks; i++) {
-    final List<skola24.Lesson>? lessons = await skola24.getLessons(schoolHostname, schoolGuid, schoolScope, classGuid, extraWeeks: i);
+    final List<skola24.Lesson>? lessons =
+        await skola24.getLessons(schoolHostname, schoolGuid, schoolScope, classGuid, extraWeeks: i, selectionType: selectionType);
+
     if (lessons == null) return Response.internalServerError(body: "Could not get lessons");
     allLessons.addAll(lessons);
   }
