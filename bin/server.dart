@@ -75,6 +75,7 @@ Future<Response> _getCalendarHandler(Request request) async {
       description: lesson.description,
       location: lesson.location,
       summary: lesson.name,
+      transparency: ITimeTransparency.TRANSPARENT,
     );
     calendar.addElement(event);
   }
