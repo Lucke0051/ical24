@@ -38,6 +38,8 @@ Future<String?> getRenderKey(String scope) async {
     headers: {
       "Content-Type": "application/json",
       "Accept": "application/json",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0",
+      "X-Requested-With": "XMLHttpRequest",
       "X-Scope": scope,
     },
   );
@@ -125,20 +127,21 @@ Future<List<Lesson>?> getLessons(
     "blackAndWhite": false,
     "customerKey": "",
     "endDate": null,
-    "height": 550,
+    "height": 652,
     "host": hostname,
     "periodText": "",
     "privateFreeTextMode": null,
     "privateSelectionMode": false,
     "renderKey": await getRenderKey(scope),
     "scheduleDay": 0,
+    "schoolYear": "e5c649f7-b64e-40d8-ae86-aae429041eb2",
     "selection": classGuid,
     "selectionType": selectionType,
     "showHeader": false,
     "startDate": null,
     "unitGuid": schoolGuid,
     "week": now.week,
-    "width": 600,
+    "width": 1183,
     "year": now.year,
   });
 
@@ -150,9 +153,14 @@ Future<List<Lesson>?> getLessons(
       port: 443,
     ),
     headers: {
+      "Accept": "application/json, text/javascript, */*; q=0.01",
+      "Accept-Language": "sv,en;q=0.9,en-GB;q=0.8,en-US;q=0.7",
       "Content-Type": "application/json",
-      "Accept": "application/json",
+      "Origin": "https://web.skola24.se",
+      "Referer": "https://web.skola24.se/timetable/timetable-viewer/",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0",
       "X-Scope": scope,
+      "X-Requested-With": "XMLHttpRequest",
     },
     body: requestBody,
   );
